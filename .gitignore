@@ -6,6 +6,7 @@ venv/
 .env
 .pytest_cache/
 .chdb/
+.env.example
 data/*.csv
 data/*.edl
 data/*.mp4
