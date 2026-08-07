@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.pytest_cache/
+.chdb/
+data/*.csv
+data/*.edl
+data/*.mp4
+data/*.srt
+out/
+!data/.gitkeep

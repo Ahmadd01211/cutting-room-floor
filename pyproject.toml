@@ -1,0 +1,33 @@
+[project]
+name = "cutting-room-floor"
+version = "0.1.0"
+description = "Test-screening telemetry, joined to the edit timeline, turned into timecoded editorial notes."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+
+dependencies = [
+    "clickhouse-connect>=0.8",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+# chdb is an embedded ClickHouse: it lets the test suite run the real engine
+# with no server, no Docker and no network.
+test = ["pytest>=8.0", "chdb>=3.0"]
+# Pinned to the packages the hackathon rules accept. No non-Google AI.
+agent = [
+    "google-adk[mcp]>=2.0",
+    "google-genai>=1.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["crf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

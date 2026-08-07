@@ -1,0 +1,40 @@
+name: cutting-room-floor
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.8
+    container_name: crf-clickhouse
+    environment:
+      CLICKHOUSE_USER: crf
+      CLICKHOUSE_PASSWORD: crf
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "8123:8123"   # HTTP — what clickhouse-connect and the MCP server use
+      - "9000:9000"   # native
+    ulimits:
+      nofile: { soft: 262144, hard: 262144 }
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--user=crf", "--password=crf", "--query", "SELECT 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
+
+  seed:
+    build: .
+    container_name: crf-seed
+    depends_on:
+      clickhouse: { condition: service_healthy }
+    environment:
+      CRF_BACKEND: clickhouse
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 8123
+      CLICKHOUSE_USER: crf
+      CLICKHOUSE_PASSWORD: crf
+      CRF_VIEWERS: ${CRF_VIEWERS:-120}
+    command: ["python", "-m", "scripts.demo", "--seed", "--report"]
+
+volumes:
+  clickhouse-data:
