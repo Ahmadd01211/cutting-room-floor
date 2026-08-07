@@ -1,15 +1,88 @@
+# ---------------------------------------------------------------- secrets
+# Nothing in here should ever reach GitHub. Note that .gitignore only stops
+# FUTURE commits — anything already pushed stays in history until rewritten.
+.env
+.env.*
+!.env.example
+
+# Google Cloud service-account keys and ADC. Named specifically rather than
+# blanket-ignoring *.json, which would swallow config we do want tracked.
+*-key.json
+*_key.json
+service-account*.json
+gcp-*.json
+credentials.json
+client_secret*.json
+application_default_credentials.json
+*.pem
+*.p12
+
+# --------------------------------------------------------------- python
 __pycache__/
 *.py[cod]
+*$py.class
 *.egg-info/
+build/
+dist/
 .venv/
 venv/
-.env
+env/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ------------------------------------------------- local engine + agent state
+# chdb writes its embedded server here; ADK's FastAPI app writes a sqlite
+# session store. Both are per-machine scratch.
 .chdb/
-.env.example
-data/*.csv
-data/*.edl
-data/*.mp4
-data/*.srt
+*.db
+*.sqlite
+*.sqlite3
+.adk/
+
+# ------------------------------------------------------------------ media
+# A public-domain feature is hundreds of MB. GitHub rejects >100MB files
+# outright and a fat repo makes judges wait on clone.
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.webm
+*.wav
+*.mp3
+*.aac
+
+# ---------------------------------------------------------------- outputs
+# Generated artifacts. The code that produces them is the deliverable; the
+# artifacts themselves are not.
 out/
+data/*.csv
+data/*.tsv
+data/*.edl
+data/*.srt
+data/*.vtt
+data/*.xml
+data/*.json
 !data/.gitkeep
+
+# ------------------------------------------------------------- node / web
+node_modules/
+.next/
+.parcel-cache/
+*.tsbuildinfo
+
+# ------------------------------------------------------------ editors / OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ----------------------------------------------------------- claude code
+# .claude/skills/ IS tracked on purpose — the workflow is part of the project.
+# Only the machine-local permission cache is ignored.
+.claude/settings.local.json
